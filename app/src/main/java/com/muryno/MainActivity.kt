@@ -8,8 +8,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,12 +51,15 @@ class MainActivity : AppCompatActivity() {
     var activePlayer=1
     var player1=ArrayList<Int>()
     var player2=ArrayList<Int>()
+    val emptyCell=ArrayList<Int>()
+
     var winner:Int=0
-    fun reset(){
+    private fun reset(){
 
             winReset=0
             player1.clear()
             player2.clear()
+            emptyCell.clear()
             bu1.isEnabled=true
             bu1.setBackgroundColor(Color.WHITE)
             bu1.text=""
@@ -96,6 +100,7 @@ class MainActivity : AppCompatActivity() {
             btnSelected.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25.0F)
             player1.add(cellId)
             activePlayer=2
+            autoplay()
         }else{
             btnSelected.text="O"
             btnSelected.setBackgroundColor(Color.BLUE)
@@ -161,7 +166,7 @@ class MainActivity : AppCompatActivity() {
 
         when(winner){
             1-> { Toast.makeText(this,"Player 1 is a winner",Toast.LENGTH_SHORT).show()
-                winner=1
+                winReset=1
                 }
             2-> {
                 Toast.makeText(this, "Player 2 is a winner", Toast.LENGTH_SHORT).show()
@@ -169,5 +174,39 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    fun autoplay(){
+
+        for (item in 1..9){
+            if(!(player1.contains(item) || player2.contains(item))){
+                emptyCell.add(item)
+            }
+        }
+
+        val r=Random()
+         val randomIndex=r.nextInt(emptyCell.size-0)+0
+
+        val cellID=emptyCell[randomIndex]
+
+        val btSelect:Button?
+
+        btSelect = when(cellID){
+            1-> bu1
+            2-> bu2
+            3-> bu3
+            4-> bu4
+            5-> bu5
+            6-> bu6
+            7-> bu7
+            8-> bu8
+            9-> bu9
+            else->
+                bu1
+
+        }
+
+        selectedBtn(cellID,btSelect)
+
     }
 }
